@@ -78,7 +78,7 @@ public class DataRankingManager : MonoBehaviour
     // Fetch and display ranking data from the server
     private void ShowGameDataRanking() {
         GetMyNickname(myNickname => {
-            Backend.GameData.Get("user_data", new Where(), bro => {
+            Backend.GameData.Get("user_data", new Where(), 1000, bro => {
                 if (!bro.IsSuccess()) {
                     Debug.LogError("Failed to fetch rankings: " + bro);
                     return;
@@ -183,7 +183,7 @@ public class DataRankingManager : MonoBehaviour
             }
             else {
                 Debug.LogError("Failed to fetch my nickname");
-                onNicknameReady?.Invoke("");
+                onNicknameReady?.Invoke("Unknown");
             }
         });
     }
