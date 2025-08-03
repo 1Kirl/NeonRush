@@ -210,6 +210,8 @@ public class BackendManager : MonoBehaviour
                     param.Add("unlockedDieEffectIds", new List<int> { 0 });
                     param.Add("equippedTrail", 0);
                     param.Add("unlockedTrail", new List<int> { 0 });
+                    param.Add("tierScore", 0);
+                    param.Add("bestTier", 0);
 
                     Backend.GameData.Insert("user_data", param, insertCallback => {
                         MainThreadDispatcher.Enqueue(() => {
@@ -288,12 +290,16 @@ public class BackendManager : MonoBehaviour
                     int flipCount = row.ContainsKey("flip_count") ? int.Parse(row["flip_count"].ToString()) : 0;
                     int coinSpent = row.ContainsKey("coin_spent") ? int.Parse(row["coin_spent"].ToString()) : 0;
                     int winCount = row.ContainsKey("win_count") ? int.Parse(row["win_count"].ToString()) : 0;
+                    int tierScore = row.ContainsKey("tierScore") ? int.Parse(row["tierScore"].ToString()) : 0;
+                    int bestTier = row.ContainsKey("bestTier") ? int.Parse(row["bestTier"].ToString()) : 0;
 
                     // PlayerPrefs도 같이 저장 (호환성 및 임시 보존용)
                     PlayerPrefs.SetInt("max_score", maxScore);
                     PlayerPrefs.SetInt("flip_count", flipCount);
                     PlayerPrefs.SetInt("coin_spent", coinSpent);
                     PlayerPrefs.SetInt("win_count", winCount);
+                    PlayerPrefs.SetInt("tierScore", tierScore);
+                    PlayerPrefs.SetInt("bestTier", bestTier);
                     PlayerPrefs.Save();
 
                     Debug.Log("[Backend] 업적 관련 데이터 PlayerPrefs 저장 완료");
