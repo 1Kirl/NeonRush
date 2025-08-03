@@ -97,5 +97,9 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
-# External Assets are also ignored! -> You should get it from Google Drive which is described in readME
+# External Assets are also ignored! -> You should get it from Google Drive which is described in README
 Assets/External Asset/
+Assets/External Asset.zip
+Assets/External Asset*.zip
+Assets/**/External Asset/
+Assets/**/External Asset*.zip
