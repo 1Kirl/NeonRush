@@ -103,3 +103,8 @@ Assets/External Asset.zip
 Assets/External Asset*.zip
 Assets/**/External Asset/
 Assets/**/External Asset*.zip
+.plastic/
+.vscode/
+.DS_Store
+.vsconfig
+ignore.conf
