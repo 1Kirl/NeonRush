@@ -76,7 +76,8 @@ public class TierUIManager : MonoBehaviour
 
         // Tier Index (TierManager)
         int tierIndex = TierManager.GetTierIndexByScore(tierScore);
-        int tierType = tierIndex / 4; // 0:Bronze, 1. Silver, 2: Gold, 3:Platinum, 4: Diamond, 5:Challenger
+        int tierType = tierIndex;
+        // 0:Bronze, 1. Silver, 2: Gold, 3:Platinum, 4: Diamond, 5:Challenger
 
         // UI Binding
         var idText = rowObj.transform.Find("Text_UserID");
