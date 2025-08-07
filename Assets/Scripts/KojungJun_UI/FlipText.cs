@@ -13,6 +13,7 @@ public class FlipText : MonoBehaviour
     [SerializeField] private List<CanvasGroup> _canvasGroupPool;
     [SerializeField] private List<RectTransform> _transformPool;
 
+
     [Header("Fade Settings")]
     [SerializeField] private float _fadeOutDuration = 0.4f;
 
@@ -95,7 +96,6 @@ public class FlipText : MonoBehaviour
 
         _activeIndices.Enqueue(idx);
         _activeTrickMap[trickName] = (idx, 1);
-
         UpdateText(idx, trickName, 1);
         AnimateVerticalFadeUp(idx); // 포함됨
         AnimatePunch(idx);          // 펀치 애니메이션 추가
@@ -126,7 +126,6 @@ public class FlipText : MonoBehaviour
     #endregion
 
     #region Private Functions
-
     private void UpdateText(int index, string name, int count) {
         var text = _trickTextPool[index];
         text.gameObject.SetActive(true);

@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class FlipScoreManager : MonoBehaviour 
 {
@@ -16,6 +17,9 @@ public class FlipScoreManager : MonoBehaviour
     [Header("Flip Score Settings")]
     [SerializeField] private GameObject _floatingTextPrefab;
     [SerializeField] private Transform _carTransform;
+    [SerializeField] private GameObject _floatingTextEffect;
+    Queue<ParticleSystem> _effectQueue;
+    [SerializeField] private WorldCanvasController _worldCanvasController;
 
     [Header("Dependencies")]
     [SerializeField] private ScoreManager _scoreManager;
@@ -67,6 +71,16 @@ public class FlipScoreManager : MonoBehaviour
             _flipChecker.onRightRoll.AddListener(flips => AddCustomScore(40 * flips, "Right Roll!", flips));
             _flipChecker.onCarGrounded.AddListener(OnGrounded);
             _flipChecker.onCarAirborne.AddListener(OnAirborne);
+        }
+        if(_floatingTextEffect!= null)
+        {
+            _effectQueue = new Queue<ParticleSystem>();
+            for (int i = 0; i < 5; i++)
+            {
+                GameObject effect = Instantiate(_floatingTextEffect);
+                effect.SetActive(false);
+                _effectQueue.Enqueue(effect.GetComponent<ParticleSystem>());
+            }
         }
     }
 
@@ -159,6 +173,15 @@ public class FlipScoreManager : MonoBehaviour
         instance.transform.LookAt(Camera.main.transform);
         instance.transform.forward = -instance.transform.forward;
 
+        if(_floatingTextEffect!= null)
+        {
+            ParticleSystem effect = _effectQueue.Dequeue();
+            effect.transform.position = spawnPos;
+            effect.gameObject.SetActive(true);
+            effect.Play();
+            _effectQueue.Enqueue(effect);
+        }
+        _worldCanvasController.ShowEffect();
         TextMeshPro textComp = instance.GetComponent<TextMeshPro>();
         if (textComp != null) {
             int colorIndex = Mathf.Clamp(combo / 10, 0, comboColors.Length - 1);
