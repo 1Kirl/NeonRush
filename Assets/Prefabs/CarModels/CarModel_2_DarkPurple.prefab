@@ -97452,7 +97452,7 @@ MonoBehaviour:
   smoothingFactorY: 3
   flipAndSpinDelay: 0.1
   driftDurationOnSpeedPad: 1.3
-  maxSelfSpeed: 38
+  maxSelfSpeed: 42
   driftRecoverTime: 1.5
   landingThresholdTime: 0.1
   StartPoint: {fileID: 0}
