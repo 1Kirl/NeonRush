@@ -13,13 +13,11 @@ public class DataRankingManager : MonoBehaviour
     #region Definitions
 
     private const int MaxVisibleRanking = 10;
-
     #endregion
 
 
 
     #region Public Variables
-
     #endregion
 
 
@@ -28,7 +26,8 @@ public class DataRankingManager : MonoBehaviour
 
     [Header("UI Components")]
     [SerializeField] private GameObject panelTrials;
-    [SerializeField] private GameObject scrollview;
+    [SerializeField] private GameObject scrollview_Ranking;
+    [SerializeField] private GameObject scrollView_TierRanking;
     [SerializeField] private List<GameObject> rankingRowPrefabList;
 
     #endregion
@@ -38,7 +37,7 @@ public class DataRankingManager : MonoBehaviour
     #region Private Variables
 
     #endregion
-
+    private bool isTierRankingMode = false;
 
 
     #region Properties
@@ -58,16 +57,34 @@ public class DataRankingManager : MonoBehaviour
     // Called when the ranking button is clicked
     public void OnClickRankingButton() {
         panelTrials.SetActive(true);
-        scrollview.SetActive(true);
-        ShowGameDataRanking();
+        RankingUIAnimator.Instance.TriggerDefaultCategorySelection("Single");
+        ShowRankingView();
     }
 
+    public void ShowTierRankingView() {
+        scrollview_Ranking.SetActive(false);
+        scrollView_TierRanking.SetActive(true);
+    }
+    public void ShowRankingView() {
+        scrollview_Ranking.SetActive(true);
+        scrollView_TierRanking.SetActive(false);
+        ShowGameDataRanking();
+    }
 
     // Closes the ranking panel
     public void CloseRankingPanel() {
         panelTrials.SetActive(false);
-        scrollview.SetActive(false);
+        scrollview_Ranking.SetActive(false);
+        scrollView_TierRanking.SetActive(false);
     }
+    public void ToggleRankingView() {
+        isTierRankingMode = !isTierRankingMode;
+        if (isTierRankingMode)
+            ShowTierRankingView();
+        else
+            ShowRankingView();
+    }
+
 
     #endregion
 
@@ -78,7 +95,7 @@ public class DataRankingManager : MonoBehaviour
     // Fetch and display ranking data from the server
     private void ShowGameDataRanking() {
         GetMyNickname(myNickname => {
-            Backend.GameData.Get("user_data", new Where(), 1000, bro => {
+            Backend.GameData.Get("user_data", new Where(), 300, bro => {
                 if (!bro.IsSuccess()) {
                     Debug.LogError("Failed to fetch rankings: " + bro);
                     return;
@@ -145,6 +162,7 @@ public class DataRankingManager : MonoBehaviour
                         ApplyRankInfo(rankingRowPrefabList[MaxVisibleRanking], sorted[myIndex], myIndex + 1);
                         rankingRowPrefabList[MaxVisibleRanking].SetActive(true);
                     }
+                    RankingUIAnimator.Instance.OnCategorySelected("Single");
                 });
             });
         });

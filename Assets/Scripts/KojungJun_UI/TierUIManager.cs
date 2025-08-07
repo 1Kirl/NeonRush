@@ -9,22 +9,14 @@ using LitJson;
 public class TierUIManager : MonoBehaviour
 {
     [Header("UI Components")]
-    [SerializeField] private GameObject panelTierRanking;
     [SerializeField] private GameObject scrollview;
     [SerializeField] private List<GameObject> rankingRowPrefabList;
     [SerializeField] private List<Sprite> tierSprites; // Order: Bronze~Challenger(0~5)
-
+    [SerializeField] private RankingUIAnimator rankingUIAnimator;
     private const int MaxVisibleRanking = 10;
 
-    public void OnClickTierRankingButton() {
-        panelTierRanking.SetActive(true);
-        scrollview.SetActive(true);
+    public void RefreshTierRank() {
         ShowTierRanking();
-    }
-
-    public void CloseTierRankingPanel() {
-        panelTierRanking.SetActive(false);
-        scrollview.SetActive(false);
     }
 
     private void ShowTierRanking() {
@@ -71,6 +63,8 @@ public class TierUIManager : MonoBehaviour
                         ApplyTierRankInfo(rankingRowPrefabList[MaxVisibleRanking], sorted[myIndex], myIndex + 1);
                         rankingRowPrefabList[MaxVisibleRanking].SetActive(true);
                     }
+                    RankingUIAnimator.Instance.OnCategorySelected("Multi");
+
                 });
             });
         });
@@ -85,13 +79,10 @@ public class TierUIManager : MonoBehaviour
         int tierType = tierIndex / 4; // 0:Bronze, 1. Silver, 2: Gold, 3:Platinum, 4: Diamond, 5:Challenger
 
         // UI Binding
-        var rankText = rowObj.transform.Find("Text_Rank");
         var idText = rowObj.transform.Find("Text_UserID");
         var tierScoreText = rowObj.transform.Find("Text_UserTierScore");
         var tierImageObj = rowObj.transform.Find("Tier_UserTier");
 
-        if (rankText != null)
-            rankText.GetComponent<TMP_Text>().text = rankNumber.ToString();
         if (idText != null)
             idText.GetComponent<TMP_Text>().text = nickname;
         if (tierScoreText != null)
@@ -106,7 +97,7 @@ public class TierUIManager : MonoBehaviour
         Backend.GameData.GetMyData("user_data", new Where(), callback => {
             if (callback.IsSuccess()) {
                 var row = callback.FlattenRows()[0];
-                string nickname = row.ContainsKey("nickname") ? row["nickname"].ToString() : "Unknown";
+                string nickname = row.ContainsKey("nickname") ? row["nickname"].ToString() : "";
                 onNicknameReady?.Invoke(nickname);
             }
             else {
