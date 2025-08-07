@@ -479,13 +479,13 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
 
 
     private IEnumerator HandleResultSequenceWithGameover(List<ResultEntry> results) {
-
         yield return StartCoroutine(WaitRealSeconds(4f));
 
         // 정렬(등수, 점수 등) 후 1등 판별
         var sortedResults = results.OrderByDescending(r => r.BonusScore).ToList();
 
-        if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId) {
+        if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId)
+        {
             int wins = PlayerPrefs.GetInt("win_count", 0) + 1;
             PlayerPrefs.SetInt("win_count", wins);
             PlayerPrefs.Save();
@@ -520,6 +520,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         inGameClientId = -1;          // My Client ID initialize.
     }
 
+    
 
     IEnumerator WaitRealSeconds(float seconds) {
         float start = Time.realtimeSinceStartup;

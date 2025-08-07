@@ -75,6 +75,7 @@ public class GameoverUIManager : MonoBehaviour
             SceneManager.LoadScene("TrackMake_2_Ko_Kirl_my");
         }
         // else (승자 로직 추가 예정)
+
     }
 
     public static List<int> GetDefeatIndexes(List<ResultEntry> results, int round, int initialPlayerCount) {
