@@ -21,6 +21,7 @@ public class Local_InputReceiver : MonoBehaviour
     private const string VERTICAL = "Vertical";
     private float _horizontalInput;
     private float _verticalInput;
+    private bool _driftKeyInput = false;
     #endregion
 
 
@@ -28,7 +29,8 @@ public class Local_InputReceiver : MonoBehaviour
     #region event
     public event Action<float> OnHorizontalInputChanged;
     public event Action<float> OnVerticalInputChanged;
-    
+    public event Action<bool> OnDriftInputChanged;
+
     #endregion
 
 
@@ -59,7 +61,18 @@ public class Local_InputReceiver : MonoBehaviour
             }
         }
     }
-
+    public bool DriftKeyInput
+    {
+        get => _driftKeyInput;
+        set
+        {
+            if (_driftKeyInput != value)
+            {
+                _driftKeyInput = value;
+                OnDriftInputChanged?.Invoke(_driftKeyInput);
+            }
+        }
+    }
     #endregion
 
 
@@ -89,6 +102,13 @@ public class Local_InputReceiver : MonoBehaviour
         packet_verticalInput = value.Get<float>();
         VerticalInput = value.Get<float>();
         Debug.Log("verticalInput: " + VerticalInput);
+    }
+    private void OnDriftKey(InputValue value)
+    {
+        //packet_horizontalInput = value.Get<bool>();
+        float raw = value.Get<float>();
+        DriftKeyInput = raw > 0.5f;
+        UnityEngine.Debug.Log("driftkey: " + DriftKeyInput);
     }
     #endregion
 

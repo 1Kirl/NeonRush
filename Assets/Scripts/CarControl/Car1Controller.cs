@@ -157,6 +157,7 @@ public class Car1Controller : MonoBehaviour
     private float _landingTime;
     private bool _okToDriftBoost = false;
     private bool _isFast = false;
+    private bool _driftKeyPressed = false;
     private bool _isDrift = false;
     private float _driftTime = 0.0f;
     private bool _driftPause = false;
@@ -214,22 +215,9 @@ public class Car1Controller : MonoBehaviour
                 OnSpeedGotLowThreshold?.Invoke();
                 _isFast = false;
                 Debug.Log("switch to normal cam - car");
-                /*
-                Debug.Log("current speed: " + _currentSpeed);
-                Debug.Log("value: " + value);
-                Debug.Log("speedThreshold: " + speedThreshold);
-                */
             }
-            // 드리프트 실행 조건??
-            /*
-            if (_isFast && _horizontalInput != 0 && !IsDrift && AllWheelsGrounded())
-            {
-                Debug.Log("activate drift");
-                IsDrift = true;
-                Drift(IsDrift);
-            }
-            */
-            if (_isFast && _horizontalInput != 0 && !IsDrift && AllWheelsGrounded())
+
+            if (_currentSpeed > 20 && _driftKeyPressed && _horizontalInput != 0 && !IsDrift && AllWheelsGrounded())
             {
                 Debug.Log("activate drift");
                 IsDrift = true;
@@ -272,6 +260,7 @@ public class Car1Controller : MonoBehaviour
         if(local_InputReceiver == null) local_InputReceiver = GetComponent<Local_InputReceiver>();
         local_InputReceiver.OnHorizontalInputChanged += UpdateHorizontalValue;
         local_InputReceiver.OnVerticalInputChanged += UpdateVerticalValue;
+        local_InputReceiver.OnDriftInputChanged += UpdateDriftValue;
         ApplyFrictionSettings(IsDrift);
     }
     private void UpdateHorizontalValue(float newValue)
@@ -281,6 +270,10 @@ public class Car1Controller : MonoBehaviour
     private void UpdateVerticalValue(float newValue)
     {
         _verticalInput = newValue;
+    }
+    private void UpdateDriftValue(bool newValue)
+    {
+        _driftKeyPressed = newValue;
     }
     private void FixedUpdate()
     {

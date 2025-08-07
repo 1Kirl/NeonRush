@@ -55,7 +55,8 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
     public event Action<Dictionary<int, clientData>> OnInitializeMultiGame;
     public event Action OnGameStart;
     public event Action OnStareCamOff;
-    public  PlayableDirector introDirector; 
+    public  PlayableDirector introDirector;
+    public List<int> myRanksPerRound = new List<int>();
     private void Awake()
     {
         if (Instance != null)
@@ -472,15 +473,15 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         }
 
         RankingUIManager.Instance.SetInitialResultUI(results);
-        // 2. 약간의 텀 후에 보너스 계산 + 애니메이션
-        StartCoroutine(AnimateFinalRankingWithBonus(results));
+        // 2. 약간의 텀 후에 보너스 계산 + 애니메이션 + Gameover 연동!
+        StartCoroutine(HandleResultSequenceWithGameover(results));
     }
-
-    private IEnumerator AnimateFinalRankingWithBonus(List<ResultEntry> results) {
+    private IEnumerator HandleResultSequenceWithGameover(List<ResultEntry> results) {
         
         yield return StartCoroutine(WaitRealSeconds(4f));
 
-        // 정렬 후 1등 판별
+
+        // 정렬(등수, 점수 등) 후 1등 판별
         var sortedResults = results.OrderByDescending(r => r.BonusScore).ToList();
 
         if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId)
@@ -493,6 +494,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             UpdateWinCountToBackend(wins);
         }
 
+        // UI 애니메이션/보상 등 처리
         RankingUIManager.Instance.ShowResultWithBonus(sortedResults);
     }
 
