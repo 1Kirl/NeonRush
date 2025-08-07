@@ -181,6 +181,7 @@ public class FlipScoreManager : MonoBehaviour
             effect.Play();
             _effectQueue.Enqueue(effect);
         }
+        SoundManager.Instance.PlaySFX(SFXType.Flip);
         _worldCanvasController.ShowEffect();
         TextMeshPro textComp = instance.GetComponent<TextMeshPro>();
         if (textComp != null) {

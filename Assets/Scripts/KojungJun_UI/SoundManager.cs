@@ -11,7 +11,9 @@ public enum SFXType
     Trick = 5,
     StartCountDown = 6,
     EndCountDown = 7,
-    RaceFinish = 8
+    RaceFinish = 8,
+    Clap = 9,
+    Flip = 10,
 }
 
 public class SoundManager : MonoBehaviour
