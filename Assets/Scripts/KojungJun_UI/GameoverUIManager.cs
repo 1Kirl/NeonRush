@@ -36,16 +36,14 @@ public class GameoverUIManager : MonoBehaviour
         // 2. 결과창 패널 애니메이션
         gameoverPanelTransform.anchoredPosition = new Vector2(0, slideOutY);
         gameoverPanelTransform.DOAnchorPosY(slideInY, 1f).SetEase(Ease.OutCubic);
-
         yield return new WaitForSeconds(10f);
-
+        
         // 5. 결과창 닫기
         gameoverPanelTransform.DOAnchorPosY(slideOutY, 1f).SetEase(Ease.InCubic);
         yield return new WaitForSeconds(1f);
 
         MultiplayResetter.ResetAll();
         FadeManager.Instance.FadeOut();
-        //티어점수 증감
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("TrackMake_2_Ko_Kirl_my");
     }
