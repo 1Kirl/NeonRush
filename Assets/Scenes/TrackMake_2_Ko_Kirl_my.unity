@@ -5154,9 +5154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialSpawnPoint: {fileID: 1006019482}
   availableTracks:
-  - trackName: 0_Jun
   - trackName: 1_Jun
-  - trackName: 2_Ko
 --- !u!1 &240693726
 GameObject:
   m_ObjectHideFlags: 0
