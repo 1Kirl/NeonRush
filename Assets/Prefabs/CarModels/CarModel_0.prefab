@@ -77722,7 +77722,7 @@ MonoBehaviour:
   smoothingFactorY: 3
   flipAndSpinDelay: 0.1
   driftDurationOnSpeedPad: 1.3
-  maxSelfSpeed: 42
+  maxSelfSpeed: 38
   driftRecoverTime: 1.5
   landingThresholdTime: 0.1
   StartPoint: {fileID: 0}
@@ -77757,8 +77757,8 @@ MonoBehaviour:
   - {fileID: 617696877323366898}
   - {fileID: 8432286133591142837}
   - {fileID: 8284796952802374448}
-  landingBoostSpeed: 8
-  driftBoostSpeed: 8
+  landingBoostSpeed: 5
+  driftBoostSpeed: 5
   boostTimeOfLanding: 0.5
   boostTimeOfDrift: 0.5
   timeThresholdToDriftBoost: 1
