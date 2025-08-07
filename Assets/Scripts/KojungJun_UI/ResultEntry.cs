@@ -16,6 +16,8 @@ public class ResultEntry
 
     public bool HasReachedFinish => ArrivalRank > 0;
 
+    public ResultEntry(ushort clientId, string name, ushort baseScore, ushort bonusScore, byte arrivalRank) {
+
     public ResultEntry(ushort clientId, string name, ushort baseScore, ushort bonusScore ,byte arrivalRank)
     {
         ClientId = clientId;
