@@ -55,12 +55,10 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
     public event Action<Dictionary<int, clientData>> OnInitializeMultiGame;
     public event Action OnGameStart;
     public event Action OnStareCamOff;
-    public  PlayableDirector introDirector;
+    public PlayableDirector introDirector;
     public List<int> myRanksPerRound = new List<int>();
-    private void Awake()
-    {
-        if (Instance != null)
-        {
+    private void Awake() {
+        if (Instance != null) {
             Destroy(gameObject);
             return;
         }
@@ -68,27 +66,22 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-    void Start()
-    {
+    void Start() {
         mainSceneManager = GameObject.Find("SceneManager").GetComponent<MainSceneManager>();
         waitingUIManager = GameObject.Find("UIManager").GetComponent<WaitingUIManager>();
         writer = new NetDataWriter();
         client = new NetManager(this);
-        if (isLocalTest)
-        {
+        if (isLocalTest) {
             serverAddress = "localhost";
         }
     }
 
-    void Update()
-    {
-        if (!connectionStart)
-        {
+    void Update() {
+        if (!connectionStart) {
             return;
         }
         client.PollEvents();
-        if (isGameStarted)
-        {
+        if (isGameStarted) {
             transform_tickTimer += Time.deltaTime;
             input_tickTimer += Time.deltaTime;
 
@@ -97,10 +90,8 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         }
     }
 
-    private void TickingInputSender()
-    {
-        while (input_tickTimer >= INPUT_TICK_RATE)
-        {
+    private void TickingInputSender() {
+        while (input_tickTimer >= INPUT_TICK_RATE) {
             input_tickTimer -= INPUT_TICK_RATE;
 
             PackingInput(
@@ -112,29 +103,24 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             input_tickCounter++;
         }
     }
-    private void TickingTransformSender()
-    {
-        while (transform_tickTimer >= TRANSFORM_TICK_RATE)
-        {
+    private void TickingTransformSender() {
+        while (transform_tickTimer >= TRANSFORM_TICK_RATE) {
             transform_tickTimer -= TRANSFORM_TICK_RATE;
             ClientMessageSender.SendPlayerTransform(serverPeer, carTransform);
             transform_tickCounter++;
         }
     }
-    public void StartConnection()
-    {
+    public void StartConnection() {
         connectionStart = true;
         client.Start();
         client.Connect(serverAddress, serverPort, connectionKey);
         //waitingUIManager.PopUpWait();
     }
-    public void StopFindingMatch()
-    {
+    public void StopFindingMatch() {
         ClientMessageSender.SendStopFinding(serverPeer);
     }
-    public void ScoreUpdate(int currentScore)
-    {
-        ClientMessageSender.SendScoreToServer(currentScore); 
+    public void ScoreUpdate(int currentScore) {
+        ClientMessageSender.SendScoreToServer(currentScore);
     }
     // ----- INetEventListener 필수 메서드 구현 -----
     public void OnPeerConnected(NetPeer peer) {
@@ -155,8 +141,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         Debug.Log($"[Client] Connected to server: {nickname} / Car: {equippedCarId} / Effect: {equippedDieEffectId} / Trail: {equippedTrailId}");
     }
 
-    public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
-    {
+    public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo) {
         // 1. 상태 플래그 리셋
         connectionStart = false;
         isGameStarted = false;
@@ -170,17 +155,14 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         Debug.Log($"[Client] Disconnected. Reason: {disconnectInfo.Reason}");
     }
 
-    public void OnNetworkError(IPEndPoint endPoint, SocketError socketError)
-    {
+    public void OnNetworkError(IPEndPoint endPoint, SocketError socketError) {
         Debug.LogError($"[Client] Network Error: {socketError}");
     }
-    public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
-    {
+    public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod) {
         int start = reader.Position;
         int length = reader.AvailableBytes;
 
-        if (length <= 0 || start + length > reader.RawData.Length)
-        {
+        if (length <= 0 || start + length > reader.RawData.Length) {
             Debug.Log("[Error] Invalid slice range: Position=" + start + ", Available=" + length);
             return;
         }
@@ -192,8 +174,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         PacketType flag = (PacketType)bitReader.ReadBits(4);
         Debug.Log("Received: flag: " + flag + " / start = " + start + " / length = " + length);
 
-        switch (flag)
-        {
+        switch (flag) {
             case PacketType.MyInfo:
                 inGameClientId = (int)bitReader.ReadBits(4);
                 break;
@@ -209,19 +190,17 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
                 player.clientId = (int)reader.GetUShort();
                 player.carKind = (int)reader.GetUShort();
                 player.DieEffect = (int)reader.GetUShort();
-                player.Trail = (int)reader.GetUShort(); 
+                player.Trail = (int)reader.GetUShort();
                 player.name = reader.GetString();
                 mapType = (MapType)reader.GetByte();
-                if (player.clientId == inGameClientId)
-                {
+                if (player.clientId == inGameClientId) {
                     player.isMe = true;
                     myNickname = player.name;
                     Debug.Log($"[LNLM] Found my Id{player.isMe}");
                 }
                 clientsDic.Add(player.clientId, player);
                 Debug.Log($"Game Member: total - {totalPlayer} / id-{player.clientId} / carKind - {player.carKind} / name - {player.name}");
-                if (totalPlayer <= clientsDic.Count)
-                {
+                if (totalPlayer <= clientsDic.Count) {
                     //씬 구성 시작
                     Debug.Log("[LNLM] Change To PvP Scene");
                     StartCoroutine(ChangeSceneAfterDelay(mapType));
@@ -284,7 +263,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
                 float delay = delta / 1000f;
                 Debug.Log($"[LNLM] Delay is : {delay}");
                 StartCoroutine(StartAfterDelay(delay));
-                
+
                 break;
             case PacketType.RankingsUpdate:
                 reader.GetByte(); // dump
@@ -319,13 +298,11 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         return serverPeer;
     }
 
-    IEnumerator StartAfterDelay(float delay)
-    {
+    IEnumerator StartAfterDelay(float delay) {
         yield return StartCoroutine(WaitRealSeconds(delay));
         //cam move shots
         FadeManager.Instance.SequenceBeforeCountdown();
-        if (introDirector != null)
-        {
+        if (introDirector != null) {
             introDirector.Play();
             Debug.Log("[LNLM] Timeline played.");
             yield return WaitRealSeconds((float)introDirector.duration);
@@ -336,18 +313,15 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         OnGameStart?.Invoke();
         isGameStarted = true; // start tick count
     }
-    IEnumerator ChangeSceneAfterDelay(MapType mapType)
-    {
+    IEnumerator ChangeSceneAfterDelay(MapType mapType) {
         waitingUIManager.UpdateMatchFound();
         yield return StartCoroutine(WaitRealSeconds(matchFoundDelay));
         serverSceneName = mainSceneManager.ChangeToMulti(mapType);
         SceneManager.sceneLoaded += OnMultiSceneLoaded;
     }
 
-    private void OnMultiSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == serverSceneName)
-        {
+    private void OnMultiSceneLoaded(Scene scene, LoadSceneMode mode) {
+        if (scene.name == serverSceneName) {
             Debug.Log("[LNLM] MultiScene Loaded");
             multiStarter = GameObject.Find("MultiGameManager").GetComponent<MultiStarter>();
             rankingUIManager = GameObject.Find("RankingManager_Multi").GetComponent<RankingUIManager>();
@@ -358,17 +332,14 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             SceneManager.sceneLoaded -= OnMultiSceneLoaded;
         }
     }
-    public void OnInitializeComplete()
-    {
+    public void OnInitializeComplete() {
         Debug.Log("[LNLM] Received OnInitializeComplete, Send ClientIsReady! ");
         ClientMessageSender.SendClientIsReady(serverPeer);
     }
-    public void SendEffectSignal(EffectType effectType)
-    {
+    public void SendEffectSignal(EffectType effectType) {
         ClientMessageSender.SendPlayerEffect(serverPeer, effectType);
     }
-    private void PackingInput(float horizontalInput, float verticalInput, out byte inputBits)
-    {
+    private void PackingInput(float horizontalInput, float verticalInput, out byte inputBits) {
         inputBits = 0;
         // V / H : input  
         // [7] [6] [5] [4] [3] [2] [1] [0]
@@ -377,23 +348,19 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         inputBits |= (byte)(EncodeInput(false, verticalInput));
         Debug.Log("inputBits: " + (int)inputBits);
     }
-    private byte EncodeInput(bool hOrV, float input)
-    {
-        if (hOrV)
-        {
+    private byte EncodeInput(bool hOrV, float input) {
+        if (hOrV) {
             if (input < -0.5f) return 0b10;
             if (input > 0.5f) return 0b01;
             return 0b00;
         }
-        else
-        {
+        else {
             if (input > 0.5f) return 0b1;
             return 0b0;
         }
 
     }
-    private void DecodeAndSaveInput(int clientId, byte inputBits)
-    {
+    private void DecodeAndSaveInput(int clientId, byte inputBits) {
 
         // 마지막 1비트 (0): vertical
         clientsDic[clientId].verticalInput = ((inputBits & 0b1) == 1) ? 1f : 0f;
@@ -404,53 +371,45 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         clientsDic[clientId].InvokeInputEvent();
         //Debug.Log($"[LNLM] Received: PlayerInput id: {clientId} / h: {clientsDic[clientId].horizontalInput}");
     }
-    private void DecodeAndSaveEffect(int clientId, byte effectData)
-    {
+    private void DecodeAndSaveEffect(int clientId, byte effectData) {
         clientsDic[clientId].InvokeEffectEvent((EffectType)effectData);
         Debug.Log($"[LNLM] Received: Effect player id: {clientId} / effect: {(EffectType)effectData}");
     }
-    private void UpdateTransform(int clientId, Vector3 pos, Quaternion rot)
-    {
+    private void UpdateTransform(int clientId, Vector3 pos, Quaternion rot) {
         clientsDic[clientId].pos = pos;
         clientsDic[clientId].rot = rot;
         clientsDic[clientId].InvokeTransformEvent();
         Debug.Log($"[LNLM] Received: TransformUpdate id: {clientId}");
     }
 
-    private float DecodeDirection(byte value)
-    {
-        return value switch
-        {
+    private float DecodeDirection(byte value) {
+        return value switch {
             0b10 => -1f,
             0b00 => 0f,
             0b01 => 1f,
             _ => 0f // _ -> rest of the cases
         };
-    }   
+    }
 
-    public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
-    {
+    public void OnNetworkReceiveUnconnected(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) {
         // 사용 안 함
     }
 
-    public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
-    {
+    public void OnNetworkLatencyUpdate(NetPeer peer, int latency) {
         //Debug.Log($"[Client] Latency: {latency}ms");
     }
 
-    public void OnConnectionRequest(ConnectionRequest request)
-    {
+    public void OnConnectionRequest(ConnectionRequest request) {
         // 클라이언트에서는 안 씀
     }
 
-    private void HandleRankingUpdate(NetPacketReader reader)
-    {
+    private void HandleRankingUpdate(NetPacketReader reader) {
         int count = reader.GetInt(); // 플레이어 수
         List<RankingEntry> list = new();
 
         for (int i = 0; i < count; i++) {
             ushort clientId = reader.GetUShort();
-            ushort score = reader.GetUShort(); 
+            ushort score = reader.GetUShort();
             string name = reader.GetString();
 
             list.Add(new RankingEntry(clientId, name, score));
@@ -496,10 +455,12 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
 
         // UI 애니메이션/보상 등 처리
         RankingUIManager.Instance.ShowResultWithBonus(sortedResults);
+        yield return StartCoroutine(WaitRealSeconds(5f));
+        ShowMyTierScoreResult(sortedResults);
     }
 
     void OnDestroy() {
-        client.Stop();    
+        client.Stop();
         clientsDic.Clear();           // CLient inform initialize
         isGameStarted = false;        // Game Start State Reset.
         inGameClientId = -1;          // My Client ID initialize.
@@ -518,13 +479,22 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         Where where = new Where();
         where.Equal("owner_inDate", BackEnd.Backend.UserInDate);
 
-        BackEnd.Backend.GameData.Update("user_data", where, param, callback =>
-        {
+        BackEnd.Backend.GameData.Update("user_data", where, param, callback => {
             if (callback.IsSuccess())
                 Debug.Log("[서버] win_count 저장 완료");
             else
                 Debug.LogWarning("[서버] win_count 저장 실패: " + callback);
         });
     }
+    private void ShowMyTierScoreResult(List<ResultEntry> results) {
+        int myId = inGameClientId;
+        // BonusScore로 내림차순 정렬 (최종 점수 랭킹)
+        var sortedResults = results.OrderByDescending(r => r.BonusScore).ToList();
 
+        // 내 순위(1등=1)
+        int myRank = sortedResults.FindIndex(r => r.ClientId == myId) + 1;
+        if (myRank > 0) {
+            TierScoreResultUI.Instance.AnimateAndUpdateTierScore(myRank);
+        }
+    }
 }
