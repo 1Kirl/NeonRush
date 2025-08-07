@@ -5131,14 +5131,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackPrefabs:
-  - trackName: 0_Jun
+  - trackName: 1
     prefab: {fileID: 941487204353650106, guid: ed0aa0b0e52083e44806d835e6e4b1da, type: 3}
     preloadCount: 10
-  - trackName: 1_Jun
+  - trackName: 2
     prefab: {fileID: 1900107196028347785, guid: d2ae18b8df043be4ea66397c8bc1247a, type: 3}
     preloadCount: 10
-  - trackName: 2_Ko
+  - trackName: 3
     prefab: {fileID: 3339680474389375282, guid: 312398b24f80dc1449a94103d86518b4, type: 3}
+    preloadCount: 10
+  - trackName: 4
+    prefab: {fileID: 1900107196028347785, guid: 0acf96f873b204b4bbb4f58cc6d42505, type: 3}
+    preloadCount: 10
+  - trackName: 5
+    prefab: {fileID: 1900107196028347785, guid: fe9320f3674a7ac41b355e8db6d9a986, type: 3}
+    preloadCount: 10
+  - trackName: 6
+    prefab: {fileID: 1900107196028347785, guid: 0acf96f873b204b4bbb4f58cc6d42505, type: 3}
+    preloadCount: 10
+  - trackName: 7
+    prefab: {fileID: 1900107196028347785, guid: 0acf96f873b204b4bbb4f58cc6d42505, type: 3}
     preloadCount: 10
 --- !u!114 &232187755
 MonoBehaviour:
@@ -5154,7 +5166,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialSpawnPoint: {fileID: 1006019482}
   availableTracks:
-  - trackName: 1_Jun
+  - trackName: 1
+  - trackName: 2
+  - trackName: 3
+  - trackName: 4
+  - trackName: 5
+  - trackName: 6
+  - trackName: 7
 --- !u!1 &240693726
 GameObject:
   m_ObjectHideFlags: 0
@@ -6085,6 +6103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040a2ff7bd259bf45a8ac31de314f931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myTierScore: 0
 --- !u!1 &288561352
 GameObject:
   m_ObjectHideFlags: 0
@@ -6634,7 +6653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _planeDistance: 10
-  _particle: {fileID: 1477782971762948, guid: 8e2edb2a8a19e674f80d0fb19fe5c051, type: 3}
+  _particle: {fileID: 1042534902773516, guid: 2f435027d5381ea47931d49b9964c220, type: 3}
 --- !u!114 &316627233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7084,7 +7103,7 @@ MonoBehaviour:
   _scoreTextTransform: {fileID: 2571814955538751755}
   _floatingTextPrefab: {fileID: 2400773440065476709, guid: b54ece6a30b0c9a4498690786ad8e9a6, type: 3}
   _carTransform: {fileID: 0}
-  _floatingTextEffect: {fileID: 1930644504616354, guid: be3a8d67cedf6394c995b869e16f4418, type: 3}
+  _floatingTextEffect: {fileID: 1132206551871088, guid: cb8a83b63e008134da9393db9af8915f, type: 3}
   _worldCanvasController: {fileID: 316627232}
   _scoreManager: {fileID: 332597813}
   _flipChecker: {fileID: 0}
