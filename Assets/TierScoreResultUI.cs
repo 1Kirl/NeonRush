@@ -27,6 +27,9 @@ public class TierScoreResultUI : MonoBehaviour
     /// </summary>
     /// 
     public static TierScoreResultUI Instance { get; private set; }
+    void Awake() {
+        Instance = this;
+    }
 
     public void PlayTierScoreResult(int prevScore, int finalScore) {
         rootPanel.SetActive(true);
