@@ -41,7 +41,7 @@ public class SoundManager : MonoBehaviour
 
         // 안전장치
         if (sfxSource == null) sfxSource = GetComponent<AudioSource>();
-        if (bgmSource == null) bgmSource = GetComponent<AudioSource>();
+        if (bgmSource == null) bgmSource = transform.GetChild(0).GetComponent<AudioSource>();
     }
 
     void Start() {
