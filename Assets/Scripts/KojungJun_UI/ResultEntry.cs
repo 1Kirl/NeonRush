@@ -16,13 +16,15 @@ public class ResultEntry
 
     public bool HasReachedFinish => ArrivalRank > 0;
 
-    public ResultEntry(ushort clientId, string name, ushort baseScore, ushort bonusScore, byte arrivalRank) {
+    public ResultEntry(ushort clientId, string name, ushort baseScore, ushort bonusScore ,byte arrivalRank)
+    {
         ClientId = clientId;
         Name = name;
         BaseScore = baseScore;
         ArrivalRank = arrivalRank;
-        BonusScore = bonusScore; // ¼­¹ö¿¡¼­ ¹Ì¸® °è»êÇØ¼­ ÁÜ
+        BonusScore = bonusScore; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½
     }
+
     public override string ToString() {
         return $"{Name} (ID: {ClientId}) | Base: {BaseScore}, Bonus: {BonusScore}, Rank: {(HasReachedFinish ? ArrivalRank.ToString() : "N/A")}";
     }
