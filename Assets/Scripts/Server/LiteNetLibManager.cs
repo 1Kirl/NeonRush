@@ -55,7 +55,8 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
     public event Action<Dictionary<int, clientData>> OnInitializeMultiGame;
     public event Action OnGameStart;
     public event Action OnStareCamOff;
-    public  PlayableDirector introDirector; 
+    public  PlayableDirector introDirector;
+    public List<int> myRanksPerRound = new List<int>();
     private void Awake()
     {
         if (Instance != null)
@@ -499,13 +500,16 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         // Gameover(탈락자) 연동
         yield return StartCoroutine(WaitRealSeconds(1f)); // 연출 후 1초정도 텀 주기
 
-        int roundNumber = 1;           // 현재 라운드(외부에서 할당 or 계산)
-        int initialPlayerCount = 8;    // 최초 인원(게임매니저에서 저장해둔 값 등)
+        int roundNumber = 1;           // 현재 라운드(외부에서 할당 or 계산) 추후 수정 
+        int initialPlayerCount = 8;    // 최초 인원(게임매니저에서 저장해둔 값 등) 추후 수정 
         int myClientId = inGameClientId; // 내 ID
 
         List<int> defeatIndexes = GameoverUIManager.GetDefeatIndexes(sortedResults, roundNumber, initialPlayerCount);
         int myRankingIndex = sortedResults.FindIndex(r => r.ClientId == myClientId);
-
+        if (defeatIndexes.Contains(myRankingIndex)) {
+            UserDataManager.Instance.ApplyTierScoreAndUpdateBackend(myRanksPerRound);
+            myRanksPerRound.Clear(); //게임이 끝나면 초기화.
+        }
         yield return StartCoroutine(GameoverUIManager.Instance.StartGameoverSequence(defeatIndexes, myRankingIndex));
     }
 
@@ -537,5 +541,23 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
                 Debug.LogWarning("[서버] win_count 저장 실패: " + callback);
         });
     }
+    // 서버로부터 라운드 종료 결과 패킷 받을 때
+    // 예: NetPacketReader reader에 이번 라운드 결과들 있음
+    void HandleRoundEndPacket(NetPacketReader reader) {
+        int count = reader.GetInt(); // 참가자 수
+        for (int i = 0; i < count; i++) {
+            ushort clientId = reader.GetUShort();
+            int thisRoundRank = reader.GetInt();
 
+            if (clientId == LiteNetLibManager.Instance.inGameClientId) {
+                AddRoundRank(thisRoundRank);
+            }
+        }
+    }
+
+
+    public void AddRoundRank(int rank) {
+        myRanksPerRound.Add(rank);
+        Debug.Log($"[티어] 내 라운드별 등수 갱신: {string.Join(",", myRanksPerRound)}");
+    }
 }

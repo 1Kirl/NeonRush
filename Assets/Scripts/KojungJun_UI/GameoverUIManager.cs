@@ -70,7 +70,8 @@ public class GameoverUIManager : MonoBehaviour
         if (defeatIndexes.Contains(myRankingIndex)) {
             MultiplayResetter.ResetAll();
             FadeManager.Instance.FadeOut();
-            yield return new WaitForSeconds(1f);
+            //티어 증가 혹은 감소 UI 애니메이션 연출
+            yield return new WaitForSeconds(5f);
             SceneManager.LoadScene("TrackMake_2_Ko_Kirl_my");
         }
         // else (승자 로직 추가 예정)
@@ -102,4 +103,6 @@ public class GameoverUIManager : MonoBehaviour
         }
         return defeatIndexes;
     }
+
+
 }
