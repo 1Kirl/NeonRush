@@ -24,25 +24,6 @@ public class ResultEntry
         ArrivalRank = arrivalRank;
         BonusScore = bonusScore; // 서버에서 미리 계산해서 줌
     }
-
-    /// <summary>
-    /// Applies ranking bonus based on arrival order.
-    /// </summary>
-    /*
-    public void ApplyRankingBonus()
-    {
-        float multiplier = ArrivalRank switch
-        {
-            1 => 2f,
-            2 => 1.5f,
-            3 => 1.25f,
-            _ => 1f
-        };
-
-        BonusScore = (ushort)(BaseScore * multiplier);
-    }
-    */
-
     public override string ToString() {
         return $"{Name} (ID: {ClientId}) | Base: {BaseScore}, Bonus: {BonusScore}, Rank: {(HasReachedFinish ? ArrivalRank.ToString() : "N/A")}";
     }

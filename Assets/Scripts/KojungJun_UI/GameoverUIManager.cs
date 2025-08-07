@@ -41,6 +41,7 @@ public class GameoverUIManager : MonoBehaviour
         MultiplayResetter.ResetAll();
         FadeManager.Instance.FadeOut();
         yield return new WaitForSeconds(1f);
+        
         SceneManager.LoadScene("TrackMake_2_Ko_Kirl_my");
     }
 }

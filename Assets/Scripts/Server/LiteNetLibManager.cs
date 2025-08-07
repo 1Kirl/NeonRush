@@ -503,6 +503,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
         inGameClientId = -1;          // My Client ID initialize.
     }
 
+    
 
     IEnumerator WaitRealSeconds(float seconds) {
         float start = Time.realtimeSinceStartup;
