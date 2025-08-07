@@ -42,8 +42,8 @@ public class UserDataManager : MonoBehaviour
     /// <summary>
     /// 게임 종료 시: 라운드별 등수 → 티어점수 누적/적용 + 서버저장
     /// </summary>
-    public void ApplyTierScoreAndUpdateBackend(List<int> myRanksPerRound) {
-        int addScore = TierManager.Instance.CalcFinalTierScore(myRanksPerRound);
+    /*public void ApplyTierScoreAndUpdateBackend(List<int> myRanksPerRound) {
+        //int addScore = TierManager.Instance.CalcFinalTierScore(myRanksPerRound);
         int finalScore = myTierScore + addScore;
         if (finalScore < 0) finalScore = 0;
 
@@ -52,7 +52,7 @@ public class UserDataManager : MonoBehaviour
 
         UpdateTierScoreToBackend(finalScore);
         myTierScore = finalScore;
-    }
+    } */
 
     /// <summary>
     /// 서버에서 내 티어 점수 불러오기(콜백 내에서 myTierScore 업데이트)

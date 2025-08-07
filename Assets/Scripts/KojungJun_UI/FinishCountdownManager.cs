@@ -55,7 +55,14 @@ public class FinishCountdownManager : MonoBehaviour
         gameOverText.transform.localScale = Vector3.zero;
         gameOverText.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
 
+        StartCoroutine(CallGameOverUIAfterDelay());
     }
+
+    private IEnumerator CallGameOverUIAfterDelay() {
+        yield return StartCoroutine(WaitRealSeconds(1f));
+        StartCoroutine(GameoverUIManager.Instance.StartGameoverSequence());
+    }
+
 
 
     public IEnumerator StartStartCountdown() {
