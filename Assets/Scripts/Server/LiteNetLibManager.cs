@@ -466,25 +466,22 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             string name = reader.GetString();
             ushort baseScore = reader.GetUShort();
             byte arrivalRank = reader.GetByte();
-
-            var entry = new ResultEntry(clientId, name, baseScore, arrivalRank);
+            ushort finalScore = reader.GetUShort();
+            var entry = new ResultEntry(clientId, name, baseScore, finalScore, arrivalRank);
             results.Add(entry); // 보너스는 잠시 뒤에 계산
         }
 
         RankingUIManager.Instance.SetInitialResultUI(results);
-        // 2. 약간의 텀 후에 보너스 계산 + 애니메이션
-        StartCoroutine(AnimateFinalRankingWithBonus(results));
+        // 2. 약간의 텀 후에 보너스 계산 + 애니메이션 + Gameover 연동!
+        StartCoroutine(HandleResultSequenceWithGameover(results));
     }
 
-    private IEnumerator AnimateFinalRankingWithBonus(List<ResultEntry> results) {
-        yield return StartCoroutine(WaitRealSeconds(2f));
 
-        foreach (var r in results)
-            r.ApplyRankingBonus();
+    private IEnumerator HandleResultSequenceWithGameover(List<ResultEntry> results) {
 
-        yield return StartCoroutine(WaitRealSeconds(2f));
+        yield return StartCoroutine(WaitRealSeconds(4f));
 
-        // 정렬 후 1등 판별
+        // 정렬(등수, 점수 등) 후 1등 판별
         var sortedResults = results.OrderByDescending(r => r.BonusScore).ToList();
 
         if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId) {
@@ -496,7 +493,20 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             UpdateWinCountToBackend(wins);
         }
 
+        // UI 애니메이션/보상 등 처리
         RankingUIManager.Instance.ShowResultWithBonus(sortedResults);
+
+        // Gameover(탈락자) 연동
+        yield return StartCoroutine(WaitRealSeconds(1f)); // 연출 후 1초정도 텀 주기
+
+        int roundNumber = 1;           // 현재 라운드(외부에서 할당 or 계산)
+        int initialPlayerCount = 8;    // 최초 인원(게임매니저에서 저장해둔 값 등)
+        int myClientId = inGameClientId; // 내 ID
+
+        List<int> defeatIndexes = GameoverUIManager.GetDefeatIndexes(sortedResults, roundNumber, initialPlayerCount);
+        int myRankingIndex = sortedResults.FindIndex(r => r.ClientId == myClientId);
+
+        yield return StartCoroutine(GameoverUIManager.Instance.StartGameoverSequence(defeatIndexes, myRankingIndex));
     }
 
     void OnDestroy() {

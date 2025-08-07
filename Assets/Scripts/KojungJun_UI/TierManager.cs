@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 public class TierManager
 {
+    // 싱글톤 인스턴스
+    private static TierManager _instance;
+    public static TierManager Instance => _instance ??= new TierManager();
+
     // int: 0~20  브4~챌린저
     public static readonly List<TierInfo> TierTable = new()
     {
@@ -53,6 +57,76 @@ public class TierManager
         }
         return 0;
     }
+    public int CalcFinalTierScore(List<int> myRanksPerRound) {
+        // myRanksPerRound: [1R 등수, 2R 등수, 3R 등수]
+        // 예: [1, 3, -1] (3라운드 못 간 경우 -1 등)
+        int totalScore = 0;
+
+        // 1라운드
+        int r1 = myRanksPerRound.Count > 0 ? myRanksPerRound[0] : -1;
+        int r2 = myRanksPerRound.Count > 1 ? myRanksPerRound[1] : -1;
+        int r3 = myRanksPerRound.Count > 2 ? myRanksPerRound[2] : -1;
+
+        // 1R
+        if (r1 != -1)
+            totalScore += CalcRoundScore(1, r1);
+
+        // 2R (탈락이면 보정점수, 진출이면 원래 점수)
+        if (r2 != -1) {
+            int basic = CalcRoundScore(2, r2);
+
+            // 3,4등 = 탈락자만 보정
+            if (r2 >= 3 && r2 <= 4) {
+                if (r1 == 1) basic = -2;
+                else if (r1 == 2) basic = -4;
+                // 3,4등은 기본(-5, -10)
+            }
+            totalScore += basic;
+        }
+
+        // 3R
+        if (r3 != -1)
+            totalScore += CalcRoundScore(3, r3);
+
+        if (totalScore < 0)
+            totalScore = 0;
+
+        return totalScore;
+    }
+
+    private int CalcRoundScore(int round, int rank) {
+        switch (round) {
+            case 1:
+                return rank switch {
+                    1 => 18,
+                    2 => 12,
+                    3 => 9,
+                    4 => 6,
+                    5 => -5,
+                    6 => -10,
+                    7 => -15,
+                    8 => -20,
+                    _ => 0
+                };
+            case 2:
+                return rank switch {
+                    1 => 18,
+                    2 => 12,
+                    3 => -5,
+                    4 => -10,
+                    _ => 0
+                };
+            case 3:
+                return rank switch {
+                    1 => 24,
+                    2 => 12,
+                    _ => 0
+                };
+            default: return 0;
+        }
+    }
+
+
 }
 
 public class TierInfo
