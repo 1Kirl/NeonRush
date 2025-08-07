@@ -6085,6 +6085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040a2ff7bd259bf45a8ac31de314f931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myTierScore: 0
 --- !u!1 &288561352
 GameObject:
   m_ObjectHideFlags: 0
@@ -6634,7 +6635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _planeDistance: 10
-  _particle: {fileID: 1477782971762948, guid: 8e2edb2a8a19e674f80d0fb19fe5c051, type: 3}
+  _particle: {fileID: 1042534902773516, guid: 2f435027d5381ea47931d49b9964c220, type: 3}
 --- !u!114 &316627233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7084,7 +7085,7 @@ MonoBehaviour:
   _scoreTextTransform: {fileID: 2571814955538751755}
   _floatingTextPrefab: {fileID: 2400773440065476709, guid: b54ece6a30b0c9a4498690786ad8e9a6, type: 3}
   _carTransform: {fileID: 0}
-  _floatingTextEffect: {fileID: 1930644504616354, guid: be3a8d67cedf6394c995b869e16f4418, type: 3}
+  _floatingTextEffect: {fileID: 1132206551871088, guid: cb8a83b63e008134da9393db9af8915f, type: 3}
   _worldCanvasController: {fileID: 316627232}
   _scoreManager: {fileID: 332597813}
   _flipChecker: {fileID: 0}
