@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class FinishCountdownManager : MonoBehaviour
 {
@@ -58,9 +59,11 @@ public class FinishCountdownManager : MonoBehaviour
     }
 
     private IEnumerator CallGameOverUIAfterDelay() {
-        yield return StartCoroutine(WaitRealSeconds(1f)); 
+        yield return StartCoroutine(WaitRealSeconds(1f));
         StartCoroutine(GameoverUIManager.Instance.StartGameoverSequence());
     }
+
+
 
     public IEnumerator StartStartCountdown() {
         for (int i = 3; i >= 1; i--) {
