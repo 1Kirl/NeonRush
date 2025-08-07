@@ -466,8 +466,8 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
             string name = reader.GetString();
             ushort baseScore = reader.GetUShort();
             byte arrivalRank = reader.GetByte();
-
-            var entry = new ResultEntry(clientId, name, baseScore, arrivalRank);
+            ushort finalScore = reader.GetUShort();
+            var entry = new ResultEntry(clientId, name, baseScore, finalScore, arrivalRank);
             results.Add(entry); // 보너스는 잠시 뒤에 계산
         }
 
@@ -477,17 +477,14 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
     }
 
     private IEnumerator AnimateFinalRankingWithBonus(List<ResultEntry> results) {
-        yield return StartCoroutine(WaitRealSeconds(2f));
-
-        foreach (var r in results)
-            r.ApplyRankingBonus();
-
-        yield return StartCoroutine(WaitRealSeconds(2f));
+        
+        yield return StartCoroutine(WaitRealSeconds(4f));
 
         // 정렬 후 1등 판별
         var sortedResults = results.OrderByDescending(r => r.BonusScore).ToList();
 
-        if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId) {
+        if (sortedResults.Count > 0 && sortedResults[0].ClientId == inGameClientId)
+        {
             int wins = PlayerPrefs.GetInt("win_count", 0) + 1;
             PlayerPrefs.SetInt("win_count", wins);
             PlayerPrefs.Save();

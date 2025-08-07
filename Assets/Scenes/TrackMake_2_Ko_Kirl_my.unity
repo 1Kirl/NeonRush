@@ -5132,10 +5132,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackPrefabs:
   - trackName: 0_Jun
-    prefab: {fileID: 1900107196028347785, guid: 9c60662795036ba4ebbf83d7c8b9d2bf, type: 3}
+    prefab: {fileID: 941487204353650106, guid: ed0aa0b0e52083e44806d835e6e4b1da, type: 3}
     preloadCount: 10
   - trackName: 1_Jun
     prefab: {fileID: 1900107196028347785, guid: d2ae18b8df043be4ea66397c8bc1247a, type: 3}
+    preloadCount: 10
+  - trackName: 2_Ko
+    prefab: {fileID: 3339680474389375282, guid: 312398b24f80dc1449a94103d86518b4, type: 3}
     preloadCount: 10
 --- !u!114 &232187755
 MonoBehaviour:
@@ -5151,7 +5154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialSpawnPoint: {fileID: 1006019482}
   availableTracks:
-  - trackName: 0_Jun
+  - trackName: 1_Jun
 --- !u!1 &240693726
 GameObject:
   m_ObjectHideFlags: 0
