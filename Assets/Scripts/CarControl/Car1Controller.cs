@@ -787,6 +787,7 @@ public class Car1Controller : MonoBehaviour
     private void PerfectLanding()
     {
         UnityEngine.Debug.Log("Perfect Landing!!");
+        SoundManager.Instance.PlaySFX(SFXType.Clap);
         Boost(LANDING_BOOST);
     }
     private void Boost(int typeOfBoost)
