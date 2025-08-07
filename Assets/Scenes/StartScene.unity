@@ -1701,8 +1701,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainScene: TrackMake_2_Ko_Kirl_my
-  isDebugMode: 0
-  resetBool: 0
+  isDebugMode: 1
+  resetBool: 1
   guestLoginButton: {fileID: 2083409342}
   backgroundImage: {fileID: 116824745}
   startGameButton: {fileID: 1082719879}
