@@ -16,19 +16,23 @@ public class ResultEntry
 
     public bool HasReachedFinish => ArrivalRank > 0;
 
-    public ResultEntry(ushort clientId, string name, ushort baseScore, byte arrivalRank) {
+    public ResultEntry(ushort clientId, string name, ushort baseScore, ushort bonusScore ,byte arrivalRank)
+    {
         ClientId = clientId;
         Name = name;
         BaseScore = baseScore;
         ArrivalRank = arrivalRank;
-        BonusScore = baseScore; // Default before bonus applied
+        BonusScore = bonusScore; // 서버에서 미리 계산해서 줌
     }
 
     /// <summary>
     /// Applies ranking bonus based on arrival order.
     /// </summary>
-    public void ApplyRankingBonus() {
-        float multiplier = ArrivalRank switch {
+    /*
+    public void ApplyRankingBonus()
+    {
+        float multiplier = ArrivalRank switch
+        {
             1 => 2f,
             2 => 1.5f,
             3 => 1.25f,
@@ -37,6 +41,7 @@ public class ResultEntry
 
         BonusScore = (ushort)(BaseScore * multiplier);
     }
+    */
 
     public override string ToString() {
         return $"{Name} (ID: {ClientId}) | Base: {BaseScore}, Bonus: {BonusScore}, Rank: {(HasReachedFinish ? ArrivalRank.ToString() : "N/A")}";
