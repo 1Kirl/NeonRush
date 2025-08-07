@@ -13,13 +13,11 @@ public class DataRankingManager : MonoBehaviour
     #region Definitions
 
     private const int MaxVisibleRanking = 10;
-
     #endregion
 
 
 
     #region Public Variables
-
     #endregion
 
 
@@ -28,7 +26,8 @@ public class DataRankingManager : MonoBehaviour
 
     [Header("UI Components")]
     [SerializeField] private GameObject panelTrials;
-    [SerializeField] private GameObject scrollview;
+    [SerializeField] private GameObject scrollview_Ranking;
+    [SerializeField] private GameObject scrollView_TierRanking;
     [SerializeField] private List<GameObject> rankingRowPrefabList;
 
     #endregion
@@ -38,7 +37,7 @@ public class DataRankingManager : MonoBehaviour
     #region Private Variables
 
     #endregion
-
+    private bool isTierRankingMode = false;
 
 
     #region Properties
@@ -58,16 +57,34 @@ public class DataRankingManager : MonoBehaviour
     // Called when the ranking button is clicked
     public void OnClickRankingButton() {
         panelTrials.SetActive(true);
-        scrollview.SetActive(true);
-        ShowGameDataRanking();
+        RankingUIAnimator.Instance.TriggerDefaultCategorySelection("Single");
+        ShowRankingView();
     }
 
+    public void ShowTierRankingView() {
+        scrollview_Ranking.SetActive(false);
+        scrollView_TierRanking.SetActive(true);
+    }
+    public void ShowRankingView() {
+        scrollview_Ranking.SetActive(true);
+        scrollView_TierRanking.SetActive(false);
+        ShowGameDataRanking();
+    }
 
     // Closes the ranking panel
     public void CloseRankingPanel() {
         panelTrials.SetActive(false);
-        scrollview.SetActive(false);
+        scrollview_Ranking.SetActive(false);
+        scrollView_TierRanking.SetActive(false);
     }
+    public void ToggleRankingView() {
+        isTierRankingMode = !isTierRankingMode;
+        if (isTierRankingMode)
+            ShowTierRankingView();
+        else
+            ShowRankingView();
+    }
+
 
     #endregion
 
@@ -78,7 +95,7 @@ public class DataRankingManager : MonoBehaviour
     // Fetch and display ranking data from the server
     private void ShowGameDataRanking() {
         GetMyNickname(myNickname => {
-            Backend.GameData.Get("user_data", new Where(), bro => {
+            Backend.GameData.Get("user_data", new Where(), 300, bro => {
                 if (!bro.IsSuccess()) {
                     Debug.LogError("Failed to fetch rankings: " + bro);
                     return;
@@ -137,15 +154,15 @@ public class DataRankingManager : MonoBehaviour
                             continue;
                         }
 
-                        ApplyRankInfo(rankingRowPrefabList[i], sorted[i]);
+                        ApplyRankInfo(rankingRowPrefabList[i], sorted[i], i + 1);
                         rankingRowPrefabList[i].SetActive(true);
                     }
 
-                    if (!isInTop10 && myIndex != -1 && myIndex < sorted.Count && rankingRowPrefabList.Count > MaxVisibleRanking) {
-                        ApplyRankInfo(rankingRowPrefabList[MaxVisibleRanking], sorted[myIndex]);
+                    if (myIndex != -1 && myIndex >= MaxVisibleRanking && rankingRowPrefabList.Count > MaxVisibleRanking) {
+                        ApplyRankInfo(rankingRowPrefabList[MaxVisibleRanking], sorted[myIndex], myIndex + 1);
                         rankingRowPrefabList[MaxVisibleRanking].SetActive(true);
-                        Debug.Log("[Ranking] Displayed my own rank outside top 10");
                     }
+                    RankingUIAnimator.Instance.OnCategorySelected("Single");
                 });
             });
         });
@@ -156,16 +173,17 @@ public class DataRankingManager : MonoBehaviour
 
 
     // Applies nickname and score data to a row GameObject
-    private void ApplyRankInfo(GameObject rowObj, JsonData row) {
+    private void ApplyRankInfo(GameObject rowObj, JsonData row, int rankNumber) {
         string nickname = row.ContainsKey("nickname") ? row["nickname"].ToString() : "Unknown";
         string score = row.ContainsKey("max_score") ? row["max_score"].ToString() : "0";
 
         Debug.Log($"Rank Entry: {nickname} / Score: {score}");
 
+        var rankText = rowObj.transform.Find("Text_Rank");
         var idText = rowObj.transform.Find("Text_UserID");
         var scoreText = rowObj.transform.Find("Text_UserScore");
 
-        if (idText == null || scoreText == null) {
+        if (rankText == null || idText == null || scoreText == null) {
             Debug.LogError("Text components not found in prefab");
             return;
         }
@@ -175,8 +193,7 @@ public class DataRankingManager : MonoBehaviour
     }
 
     private void GetMyNickname(System.Action<string> onNicknameReady) {
-        Backend.GameData.GetMyData("user_data", new Where(), callback =>
-        {
+        Backend.GameData.GetMyData("user_data", new Where(), callback => {
             if (callback.IsSuccess()) {
                 var row = callback.FlattenRows()[0];
                 string nickname = row.ContainsKey("nickname") ? row["nickname"].ToString() : "Unknown";
@@ -191,7 +208,3 @@ public class DataRankingManager : MonoBehaviour
 
     #endregion
 }
-
-
-
-
