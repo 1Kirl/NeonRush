@@ -38,7 +38,7 @@ public class LiteNetLibManager : MonoBehaviour, INetEventListener
     [SerializeField] private bool isLocalTest = false;
     public bool connectionStart = false;
     private string myNickname = "test";
-    private string serverAddress = "158.247.255.112";
+    private string serverAddress = "158.247.240.127";
     private int serverPort = 7777;
     private string connectionKey = "hsdbpc";
     private byte inputBits;
