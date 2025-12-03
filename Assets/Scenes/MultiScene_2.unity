@@ -56612,7 +56612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delayTime: 0.1
-  time: 0.1
+  time: 0.2
   endTransform: {fileID: 6688150213677974156}
   resetDelay: 2
 --- !u!23 &2716756004752321255
@@ -157805,13 +157805,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192198745739044508}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalRotation: {x: 0.08074225, y: -0, z: -0, w: 0.99673504}
+  m_LocalPosition: {x: 0, y: 2.97, z: 0.4099993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5295655882339463953}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 9.262, y: 0, z: 0}
 --- !u!4 &6692232344499296357
 Transform:
   m_ObjectHideFlags: 0
